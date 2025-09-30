@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>French Vocabulary Sentence Optimizer v2.0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .progress-bar { transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .pulse-slow { animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 min-h-screen">
+    
+    <!-- Header -->
+    <div class="container mx-auto px-4 py-6 max-w-6xl">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 mb-6 border border-indigo-100">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl p-3 shadow-lg">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                            French Vocabulary Optimizer
+                        </h1>
+                        <p class="text-gray-600 text-sm mt-1">
+                            <span class="font-semibold">v2.0</span> • Find minimum sentences to cover 2000+ words
+                        </p>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center gap-2 text-sm">
+                    <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full font-medium">10x Faster</span>
+                    <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full font-medium">3 Algorithms</span>
+                    <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full font-medium">Rich Formatting</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input Form -->
+        <div id="inputForm" class="bg-white rounded-2xl shadow-xl p-8 mb-6 border border-gray-200">
+            <div class="flex items-center gap-3 mb-6">
+                <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                <h2 class="text-2xl font-bold text-gray-800">Configuration</h2>
+            </div>
+            
+            <form id="optimizerForm" class="space-y-6">
+                <!-- Google Sheets URL -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        📊 Google Sheets URL (2000 Word List)
+                    </label>
+                    <input type="text" id="wordListUrl" required
+                        placeholder="https://docs.google.com/spreadsheets/d/..."
+                        class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
+                    <p class="text-xs text-gray-500 mt-1">Format: French | English | Part of Speech</p>
+                </div>
+
+                <!-- File Upload -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        📄 Sentence Input File (CSV/TXT)
+                    </label>
+                    <div id="dropZone" class="border-3 border-dashed border-gray-300 rounded-xl p-12 text-center cursor-pointer hover:border-indigo-500 hover:bg-indigo-50/50 transition-all duration-300">
+                        <svg class="w-16 h-16 text-gray-400 mx-auto mb-4 pulse-slow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                        </svg>
+                        <p id="dropZoneText" class="text-gray-700 font-semibold text-lg mb-2">Drag & drop your file here</p>
+                        <p class="text-sm text-gray-500">or click to browse • CSV, TXT, TSV supported</p>
+                        <p class="text-xs text-gray-400 mt-2">Max file size: 100MB</p>
+                    </div>
+                    <input type="file" id="sentenceFile" accept=".csv,.txt,.tsv" class="hidden" required>
+                </div>
+
+                <!-- Settings Grid -->
+                <div class="grid md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            🎯 Max Sentences
+                        </label>
+                        <input type="number" id="maxSentences" value="600" min="1" max="2000"
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            🔍 Matching Mode
+                        </label>
+                        <select id="strictness"
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500">
+                            <option value="exact">Exact Match Only</option>
+                            <option value="normal" selected>Normal (Lemmas)</option>
+                            <option value="fuzzy">Fuzzy Match</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            ⚡ Algorithm
+                        </label>
+                        <select id="algorithm"
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500">
+                            <option value="greedy">Greedy (Fast)</option>
+                            <option value="weighted_greedy" selected>Weighted (Best)</option>
+                            <option value="beam_search">Beam Search (Slow)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" id="processBtn"
+                    class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-xl font-bold text-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-3">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                    Start Optimization
+                </button>
+            </form>
+        </div>
+
+        <!-- Progress Display -->
+        <div id="progressDisplay" class="bg-white rounded-2xl shadow-xl p-8 hidden border border-gray-200 fade-in">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Processing...</h2>
+                <div class="flex items-center gap-2">
+                    <div class="animate-spin h-5 w-5 border-3 border-indigo-600 border-t-transparent rounded-full"></div>
+                    <span id="progressStage" class="text-sm font-medium text-indigo-600">Loading...</span>
+                </div>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="mb-6">
+                <div class="flex justify-between text-sm font-medium text-gray-700 mb-2">
+                    <span>Coverage Progress</span>
+                    <span id="progressPercent" class="text-indigo-600">0%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden shadow-inner">
+                    <div id="progressBar" class="progress-bar bg-gradient-to-r from-indigo-500 to-purple-600 h-4 rounded-full shadow-lg" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 border border-blue-200">
+                    <div class="flex items-center gap-3 mb-2">
+                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                        </svg>
+                        <span class="text-sm font-medium text-blue-700">Words Covered</span>
+                    </div>
+                    <p id="wordsCovered" class="text-4xl font-bold text-blue-600">0</p>
+                    <p class="text-xs text-blue-600 mt-1">out of <span id="totalWords">2000</span></p>
+                </div>
+                <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 border border-green-200">
+                    <div class="flex items-center gap-3 mb-2">
+                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <span class="text-sm font-medium text-green-700">Sentences Selected</span>
+                    </div>
+                    <p id="sentencesSelected" class="text-4xl font-bold text-green-600">0</p>
+                    <p class="text-xs text-green-600 mt-1">target: <span id="targetSentences">600</span></p>
+                </div>
+            </div>
+
+            <p id="currentSentence" class="mt-6 text-sm text-gray-600 text-center py-3 bg-gray-50 rounded-lg">
+                Preparing optimization...
+            </p>
+        </div>
+
+        <!-- Results Display -->
+        <div id="resultsDisplay" class="bg-white rounded-2xl shadow-xl p-8 hidden border border-gray-200 fade-in">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="bg-green-100 rounded-full p-3">
+                    <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-800">Optimization Complete!</h2>
+                    <p class="text-gray-600">Your results are ready</p>
+                </div>
+            </div>
+
+            <!-- Results Grid -->
+            <div class="grid md:grid-cols-4 gap-4 mb-8">
+                <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 border-2 border-blue-200">
+                    <p class="text-sm font-semibold text-blue-700 mb-2">Total Sentences</p>
+                    <p id="resultSentences" class="text-5xl font-bold text-blue-600 mb-1">0</p>
+                    <p id="targetStatus" class="text-xs font-medium text-green-600"></p>
+                </div>
+                <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 border-2 border-green-200">
+                    <p class="text-sm font-semibold text-green-700 mb-2">Words Covered</p>
+                    <p id="resultWords" class="text-5xl font-bold text-green-600 mb-1">0</p>
+                    <p id="coveragePercent" class="text-xs font-medium text-gray-600"></p>
+                </div>
+                <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 border-2 border-purple-200">
+                    <p class="text-sm font-semibold text-purple-700 mb-2">Efficiency</p>
+                    <p id="resultEfficiency" class="text-5xl font-bold text-purple-600 mb-1">0</p>
+                    <p class="text-xs font-medium text-gray-600">words/sentence</p>
+                </div>
+                <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-6 border-2 border-orange-200">
+                    <p class="text-sm font-semibold text-orange-700 mb-2">Processing Time</p>
+                    <p id="resultTime" class="text-5xl font-bold text-orange-600 mb-1">0s</p>
+                    <p id="algorithmUsed" class="text-xs font-medium text-gray-600"></p>
+                </div>
+            </div>
+
+            <!-- Missing Words Warning -->
+            <div id="missingWordsWarning" class="bg-orange-50 border-2 border-orange-200 rounded-xl p-5 mb-6 hidden">
+                <div class="flex items-start gap-3">
+                    <svg class="w-6 h-6 text-orange-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                    <div class="flex-1">
+                        <p class="font-bold text-orange-800 mb-1">⚠ Some Words Not Found</p>
+                        <p id="missingWordsText" class="text-sm text-orange-700"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="space-y-3">
+                <a id="sheetLink" href="#" target="_blank"
+                    class="block w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white py-4 rounded-xl font-bold text-center hover:from-green-700 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-3">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"/>
+                        <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"/>
+                    </svg>
+                    Open Google Sheets Results
+                </a>
+                
+                <button onclick="downloadCSV()"
+                    class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-xl font-bold hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-3">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                    </svg>
+                    Download CSV Backups
+                </button>
+
+                <button onclick="resetForm()"
+                    class="w-full bg-gray-200 text-gray-700 py-4 rounded-xl font-bold hover:bg-gray-300 transition-all duration-300 flex items-center justify-center gap-3">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                    </svg>
+                    Process Another File
+                </button>
+            </div>
+        </div>
+
+        <!-- Info Footer -->
+        <div class="mt-8 bg-white/50 backdrop-blur rounded-xl p-6 border border-gray-200">
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        How It Works
+                    </h3>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li class="flex items-start gap-2">
+                            <span class="text-indigo-600 font-bold">•</span>
+                            <span>Handles gender variations (un|une), verb conjugations, multi-word phrases</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-indigo-600 font-bold">•</span>
+                            <span>Uses advanced NLP with spaCy French model for lemmatization</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-indigo-600 font-bold">•</span>
+                            <span>Smart caching system - 10x faster on repeated runs</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        Output Format
+                    </h3>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 font-bold">✓</span>
+                            <span>Google Sheets with 5 tabs: Sentences, Summary, Missing Words, Coverage Map, Statistics</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 font-bold">✓</span>
+                            <span>Rich formatting with color-coded efficiency and conditional formatting</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 font-bold">✓</span>
+                            <span>CSV backup files for offline analysis</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/script_new.js"></script>
+</body>
+</html>

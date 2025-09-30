@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>French Vocabulary Sentence Optimizer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .progress-bar {
+            transition: width 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen p-8">
+    <div class="max-w-5xl mx-auto">
+        <!-- Header -->
+        <div class="bg-white rounded-xl shadow-xl p-8 mb-6">
+            <div class="flex items-center gap-3 mb-2">
+                <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <h1 class="text-3xl font-bold text-gray-800">French Vocabulary Sentence Optimizer</h1>
+            </div>
+            <p class="text-gray-600 ml-11">Find the minimum sentences needed to cover 2000 French words</p>
+        </div>
+
+        <!-- Input Form -->
+        <div id="inputForm" class="bg-white rounded-xl shadow-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                Input Configuration
+            </h2>
+            
+            <form id="optimizerForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Google Sheets URL (2000 Word List)
+                    </label>
+                    <input type="text" id="wordListUrl" required
+                        placeholder="https://docs.google.com/spreadsheets/d/..."
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Sentence Input File (CSV/TXT)
+                    </label>
+                    <div id="dropZone" 
+                        class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-indigo-500 transition-colors">
+                        <svg class="w-12 h-12 text-gray-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                        </svg>
+                        <p id="dropZoneText" class="text-gray-600 font-medium">Drag & drop your sentence file here</p>
+                        <p class="text-sm text-gray-500">or click to browse</p>
+                    </div>
+                    <input type="file" id="sentenceFile" accept=".csv,.txt" class="hidden" required>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Max Sentences Target
+                        </label>
+                        <input type="number" id="maxSentences" value="600"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Matching Strictness
+                        </label>
+                        <select id="strictness"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                            <option value="exact">Exact Match</option>
+                            <option value="normal" selected>Normal (Recommended)</option>
+                            <option value="fuzzy">Fuzzy Match</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" id="processBtn"
+                    class="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Start Optimization
+                </button>
+            </form>
+        </div>
+
+        <!-- Progress Display -->
+        <div id="progressDisplay" class="bg-white rounded-xl shadow-lg p-6 hidden">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Processing Progress</h2>
+            
+            <div class="mb-4">
+                <div class="flex justify-between text-sm text-gray-600 mb-2">
+                    <span id="progressStage">Loading...</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-3">
+                    <div id="progressBar" class="progress-bar bg-indigo-600 h-3 rounded-full" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 text-center">
+                <div class="bg-blue-50 rounded-lg p-4">
+                    <p id="wordsCovered" class="text-3xl font-bold text-blue-600">0</p>
+                    <p class="text-sm text-gray-600">Words Covered / 2000</p>
+                </div>
+                <div class="bg-green-50 rounded-lg p-4">
+                    <p id="sentencesSelected" class="text-3xl font-bold text-green-600">0</p>
+                    <p class="text-sm text-gray-600">Sentences Selected</p>
+                </div>
+            </div>
+
+            <div id="currentSentence" class="mt-4 text-sm text-gray-600 text-center">
+                Preparing...
+            </div>
+        </div>
+
+        <!-- Results Display -->
+        <div id="resultsDisplay" class="bg-white rounded-xl shadow-lg p-6 hidden">
+            <div class="flex items-center gap-2 mb-6">
+                <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <h2 class="text-2xl font-semibold text-gray-800">Optimization Complete!</h2>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4 mb-6">
+                <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 text-center">
+                    <p id="resultSentences" class="text-4xl font-bold text-blue-600">0</p>
+                    <p class="text-sm text-gray-600 mt-1">Total Sentences</p>
+                    <p id="targetStatus" class="text-xs text-green-600 mt-1"></p>
+                </div>
+                <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 text-center">
+                    <p id="resultWords" class="text-4xl font-bold text-green-600">0</p>
+                    <p class="text-sm text-gray-600 mt-1">Words Covered</p>
+                    <p id="coveragePercent" class="text-xs text-gray-500 mt-1">0% coverage</p>
+                </div>
+                <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 text-center">
+                    <p id="resultEfficiency" class="text-4xl font-bold text-purple-600">0</p>
+                    <p class="text-sm text-gray-600 mt-1">Words per Sentence</p>
+                    <p class="text-xs text-gray-500 mt-1">Efficiency score</p>
+                </div>
+            </div>
+
+            <div id="missingWordsWarning" class="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-6 hidden">
+                <div class="flex items-start gap-2">
+                    <svg class="w-5 h-5 text-orange-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                    </svg>
+                    <div>
+                        <p class="font-semibold text-orange-800">Note: Some words not found</p>
+                        <p id="missingWordsText" class="text-sm text-orange-700 mt-1"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-3">
+                <a id="sheetLink" href="#" target="_blank"
+                    class="block w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 text-center transition-colors">
+                    📊 Open Google Sheets Results
+                </a>
+                
+                <button onclick="downloadCSV()"
+                    class="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 flex items-center justify-center gap-2 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                    Download CSV Backup
+                </button>
+
+                <button onclick="resetForm()"
+                    class="w-full bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors">
+                    Process Another File
+                </button>
+            </div>
+        </div>
+
+        <!-- Info Box -->
+        <div class="mt-6 bg-white rounded-lg shadow p-4 text-sm text-gray-600">
+            <p class="font-semibold mb-2">📋 How it works:</p>
+            <ul class="space-y-1 ml-4">
+                <li>• Handles gender variations (Un|Une), verb conjugations, and multi-word phrases</li>
+                <li>• Uses greedy optimization to find minimum sentence set</li>
+                <li>• Outputs to Google Sheets with 4 tabs: Sentences, Summary, Missing Words, Coverage Map</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
