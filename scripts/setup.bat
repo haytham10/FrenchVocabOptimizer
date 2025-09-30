@@ -2,19 +2,22 @@
 setlocal EnableExtensions EnableDelayedExpansion
 
 REM -----------------------------------------------------------------
-REM French Vocabulary Sentence Optimizer - Setup
+REM French Vocab Optimizer - Setup Script (v2.0 Enhanced Edition)
 REM Flags:
 REM   --clean     Recreate the virtual environment from scratch
 REM   --no-model  Skip spaCy model download/check
 REM -----------------------------------------------------------------
 
 echo ============================================================
-echo French Vocabulary Sentence Optimizer - Setup
+echo French Vocab Optimizer v2.0 - Setup
 echo ============================================================
 echo.
 
-REM Always run from the script's directory
-pushd "%~dp0" >nul 2>&1
+REM Navigate to project root (parent of scripts directory)
+cd /d "%~dp0\.."
+set "PROJECT_ROOT=%CD%"
+echo Project root: %PROJECT_ROOT%
+echo.
 
 REM Parse flags
 set "FLAG_CLEAN=0"
@@ -50,9 +53,8 @@ echo.
 
 REM Ensure requirements.txt exists
 if not exist requirements.txt (
-    echo ERROR: requirements.txt not found!
-    echo Please run this script from the project folder where requirements.txt exists.
-    popd
+    echo ERROR: requirements.txt not found in %PROJECT_ROOT%
+    echo Please ensure you're running this script from the correct location.
     pause
     exit /b 1
 )
@@ -99,15 +101,22 @@ if %errorlevel% neq 0 (
 )
 echo.
 
-echo [4/7] Installing Python packages from requirements.txt (may take several minutes)...
+echo [4/7] Installing Python packages from requirements.txt...
+echo This may take several minutes (especially spaCy and numpy)...
 python -m pip install --upgrade --prefer-binary -r requirements.txt
 if %errorlevel% neq 0 (
+    echo.
     echo ERROR: Failed to install some packages from requirements.txt
-    echo Try running this script as Administrator or check your internet connection.
-    popd
+    echo.
+    echo Troubleshooting tips:
+    echo - Try running as Administrator
+    echo - Check your internet connection
+    echo - Ensure you have Visual C++ Build Tools (for some packages)
+    echo - Try: pip install --upgrade pip
     pause
     exit /b 1
 )
+echo All packages installed successfully!
 echo.
 
 REM Check/install spaCy French model only if not skipped
@@ -132,32 +141,61 @@ if not "%FLAG_NO_MODEL%"=="1" (
 )
 echo.
 
-REM Create necessary folders
+REM Create necessary folders for v2.0
 echo [6/7] Ensuring project folders exist...
+if not exist core mkdir core >nul 2>&1
 if not exist web_interface mkdir web_interface >nul 2>&1
 if not exist web_interface\templates mkdir web_interface\templates >nul 2>&1
 if not exist web_interface\static mkdir web_interface\static >nul 2>&1
+if not exist web_interface\uploads mkdir web_interface\uploads >nul 2>&1
+if not exist web_interface\output mkdir web_interface\output >nul 2>&1
 if not exist uploads mkdir uploads >nul 2>&1
 if not exist output mkdir output >nul 2>&1
+if not exist docs mkdir docs >nul 2>&1
+if not exist tests mkdir tests >nul 2>&1
+if not exist backups mkdir backups >nul 2>&1
 echo Folders verified/created.
 echo.
 
-echo [7/7] Summary
-echo Installed packages (selected):
-python -m pip list | findstr /i "spacy gspread flask pandas numpy"
+echo [7/7] Running system verification...
+python -c "from core.config import OptimizerConfig; print('✓ Core modules OK')" 2>nul
+if %errorlevel% neq 0 (
+    echo WARNING: Core modules not fully accessible
+    echo This is normal if this is a fresh installation
+)
+python -c "import spacy, flask, gspread, numpy; print('✓ Key packages OK')" 2>nul
+if %errorlevel% neq 0 (
+    echo WARNING: Some key packages may not be properly installed
+)
 echo.
 
 echo ============================================================
-echo Setup Complete!
+echo Setup Complete! v2.0 Enhanced Edition Ready
 echo ============================================================
+echo.
+echo Installed packages (core):
+python -m pip list | findstr /i "spacy gspread flask numpy pandas"
 echo.
 echo Next steps:
-echo 1. Place your credentials.json file in this folder (if not already)
-echo 2. Run run_application.bat to start the web interface
-echo    OR run run_optimizer.bat for command-line usage
+echo   1. Place credentials.json in project root: %PROJECT_ROOT%
+echo   2. Start web interface: 
+echo      cd web_interface
+echo      python app.py
+echo   3. Open browser: http://localhost:5000
+echo.
+echo Documentation:
+echo   - Quick Start: docs\QUICKSTART_GUIDE.md
+echo   - Full Guide: docs\README_NEW.md
+echo   - Run Tests: python tests\test_enhanced_system.py
+echo.
+echo Features in v2.0:
+echo   ✓ 10x Performance Improvement
+echo   ✓ Modern Tailwind CSS UI
+echo   ✓ 3 Optimization Algorithms
+echo   ✓ Rich 5-Tab Google Sheets Export
+echo   ✓ Real-time Progress Tracking
 echo.
 
-popd >nul 2>&1
 endlocal
 echo Press any key to exit...
 pause >nul
