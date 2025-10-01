@@ -17,38 +17,6 @@
 
 ## 🚀 Quick Start
 
-### 1️⃣ Setup (First Time - 5 minutes)
-
-```bash
-# Windows: Run automated setup
-scripts\setup.bat
-
-# Or manually:
-python -m venv venv
-venv\Scripts\activate
-pip install -r requirements.txt
-python -m spacy download fr_core_news_lg
-```
-# French Vocab Optimizer 🇫🇷
-
-An intelligent Python tool to optimize French vocabulary learning by finding the minimum set of sentences that cover your vocabulary list.
-
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![spaCy](https://img.shields.io/badge/built%20with-spaCy-09a3d5.svg)](https://spacy.io)
-[![Status](https://img.shields.io/badge/status-active-success.svg)]()
-[![Tests](https://img.shields.io/badge/tests-5%2F5%20passing-brightgreen)]()
-
-> Version 2.0 - Enhanced Edition
-
-> - 🚀 10x performance improvement with smart caching
-> - 🎨 Modern UI with Tailwind CSS and real-time progress
-> - 🧠 Three optimization algorithms (greedy, weighted_greedy, beam_search)
-> - 📊 Rich Google Sheets export (5 formatted tabs)
-
----
-
-## 🚀 Quick Start
-
 ### 1. Setup (first time)
 
 Windows automated setup:
